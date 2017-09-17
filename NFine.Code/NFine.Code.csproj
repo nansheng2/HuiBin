@@ -120,12 +120,22 @@
   <ItemGroup>
     <Content Include="DLL\ICSharpCode.SharpZipLib.dll" />
     <Content Include="DLL\log4net.dll" />
+    <Content Include="DLL\Microsoft.Web.Infrastructure.dll" />
     <Content Include="DLL\Newtonsoft.Json.dll" />
     <Content Include="DLL\NFine.Code.dll" />
     <Content Include="DLL\NPOI.dll" />
     <Content Include="DLL\NPOI.OOXML.dll" />
     <Content Include="DLL\NPOI.OpenXml4Net.dll" />
     <Content Include="DLL\NPOI.OpenXmlFormats.dll" />
+    <Content Include="DLL\System.Net.Http.Formatting.dll" />
+    <Content Include="DLL\System.Web.Helpers.dll" />
+    <Content Include="DLL\System.Web.Http.dll" />
+    <Content Include="DLL\System.Web.Http.WebHost.dll" />
+    <Content Include="DLL\System.Web.Mvc.dll" />
+    <Content Include="DLL\System.Web.Razor.dll" />
+    <Content Include="DLL\System.Web.WebPages.Deployment.dll" />
+    <Content Include="DLL\System.Web.WebPages.dll" />
+    <Content Include="DLL\System.Web.WebPages.Razor.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
