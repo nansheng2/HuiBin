@@ -4,6 +4,11 @@
 }
 <script>
     var keyValue = $.request("keyValue");
+
+    var lastBtn = null;
+    var thisBtn = null;
+    var nextBtn = null;
+
     $(function () {
         initControl();
         if (!!keyValue) {
@@ -18,7 +23,15 @@
             });
         }
     })
+
     function initControl() {
+        $("#Gender").bindSelect();
+        $("#Category").bindSelect();
+        $("#OrderType").bindSelect();
+
+        //添加事件
+        addSegmentation();
+
         $("#F_OrganizeId").bindSelect({
             url: "/SystemManage/Organize/GetTreeSelectJson",
         });
@@ -32,7 +45,29 @@
             if (data.direction == "next") {
                 switch (data.step) {
                     case 1:
-                        if (!$('#form1').formValid()) {
+                        if (!$('#step-1').Validform()) {
+                            return false;
+                        }
+                        $finish.hide();
+                        $next.show();
+                        break;
+                    case 2:
+                        if (!$('#step-2').Validform()) {
+                            return false;
+                        }
+                        $finish.hide();
+                        $next.show();
+                        break;
+                    case 3:
+                        if (!$('#step-3').Validform()) {
+                            return false;
+                        }
+
+                        $finish.hide();
+                        $next.show();
+                        break;
+                    case 4:
+                        if (!$('#step-4').Validform()) {
                             return false;
                         }
                         $finish.show();
@@ -46,14 +81,10 @@
                 $next.show();
             }
         });
-        $("#permissionTree").treeview({
-            height: 444,
-            showcheck: true,
-            url: "/SystemManage/RoleAuthorize/GetPermissionTree",
-            param: { roleId: keyValue }
-        });
     }
+
     function submitForm() {
+
         var postData = $("#form1").formSerialize();
         postData["permissionIds"] = String($("#permissionTree").getCheckedNodes());
         $.submitForm({
@@ -64,6 +95,72 @@
             }
         });
     }
+
+    //添加分段
+    function addSegmentation() {
+        //所有添加按钮添加事件
+        $("#form1 .form").on("click", ".addSegmentation", function () {
+
+
+
+            var form = $(this).parent().parent().parent();
+            var html = '<tr>';
+            html += '<th class="formTitle" > 时间段</th>';
+            html += '    <td class="formValue">';
+            html += '        <div style="float: left; width: 45%;">';
+            html += '            <input id="StartTime1" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:\'HH: mm\'})">';
+            html += '                </div>';
+            html += '            <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>';
+            html += '            <div style="float: left; width: 45%;">';
+            html += '                <input id="EndTime1" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:\'HH: mm\'})">';
+            html += '                </div>';
+            html += '            </td>';
+            html += '           <th class="formTitle">预约数量</th>';
+            html += '            <td class="formValue">';
+            html += '                <div style="float: left; width: 50%;">';
+            html += '                    <input id="OrderCount1" name="OrderCount1" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约数量" />';
+            html += '                </div>';
+            html += '<div style="float: left; width: 40%; margin-left:20px;">';
+            html += '    <a class="btn btn-success addSegmentation"><i class="fa fa-plus"></i>&nbsp;添加</a>';
+            html += '    <a class="btn btn-danger addSegmentation"><i class="fa fa-trash-o"></i>&nbsp;删除</a>';
+            html += '</div>';
+            html += '            </td>';
+            html += '        </tr>';
+
+            $(form).after(html);
+
+            //查找下一个按钮
+            var nextBtn = $(form).next().find(".addSegmentation");
+
+
+            lastBtn = $(form).prev();
+
+            //上一个按钮
+            if ($(lastBtn).html() != undefined) {
+                var btn = $(lastBtn).find(".addSegmentation");
+                btn.removeClass("btn-success");
+                btn.addClass("btn-danger");
+                var pic = $(btn).find(".fa-plus");
+                pic.removeClass(".fa-plus");
+                pic.addClass("fa-trash-o");
+
+            }
+
+            //下一个按钮
+            //if ($(lastBtn).html() != undefined) {
+            //    var btn = $(lastBtn).find(".addSegmentation");
+            //    btn.removeClass("btn-success");
+            //    btn.addClass("btn-danger");
+            //    var pic = $(btn).find(".fa-plus");
+            //    pic.removeClass(".fa-plus");
+            //    pic.addClass("fa-trash-o");
+
+            //}
+
+
+        });
+    }
+
 </script>
 <form id="form1">
     <div class="widget-body">
@@ -71,247 +168,282 @@
             <ul class="steps">
                 <li data-target="#step-1" class="active"><span class="step">1</span>医生信息<span class="chevron"></span></li>
                 <li data-target="#step-2"><span class="step">2</span>出诊信息<span class="chevron"></span></li>
+                <li data-target="#step-3"><span class="step">3</span>出诊数量<span class="chevron"></span></li>
+                <li data-target="#step-4"><span class="step">4</span>分段上午<span class="chevron"></span></li>
+                <li data-target="#step-5"><span class="step">5</span>分段下午<span class="chevron"></span></li>
+                <li data-target="#step-6"><span class="step">6</span>分段晚上<span class="chevron"></span></li>
             </ul>
         </div>
         <div class="step-content" id="wizard-steps" style="border-left: none; border-bottom: none; border-right: none;">
-            <div class="step-pane active" id="step-1" style="margin: 10px; margin-bottom: 0px;">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">医生信息</h3>
-                    </div>
-                    <div class="panel-body" style="width: 98%;">
-                        <table class="form">
-                            <tr>
-                                <th class="formTitle">姓名</th>
-                                <td class="formValue">
-                                    <input id="F_RealName" name="F_RealName" type="text" class="form-control required" placeholder="请输入姓名" />
-                                </td>
-                                <th class="formTitle">性别</th>
-                                <td class="formValue">
-                                    <select id="F_Gender" name="F_Gender" class="form-control required">
-                                        <option value="true">男</option>
-                                        <option value="false">女</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">职称</th>
-                                <td class="formValue">
-                                    <input id="F_MobilePhone" name="F_MobilePhone" type="text" class="form-control" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle" valign="top" style="padding-top: 5px;">
-                                    专长
-                                </th>
-                                <td class="formValue" colspan="3">
-                                    <textarea id="F_Description" name="F_Description" class="form-control" style="height: 60px;"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle" valign="top" style="padding-top: 5px;">
-                                    简介
-                                </th>
-                                <td class="formValue" colspan="3">
-                                    <textarea id="F_Description" name="F_Description" class="form-control" style="height: 60px;"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+            <div class="step-pane active" id="step-1" style="padding-top: 20px; margin-right: 40px;">
+
+                <table class="form">
+                    <tr>
+                        <th class="formTitle">姓名</th>
+                        <td class="formValue">
+                            <input id="Name" name="Name" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" placeholder="请输入姓名" />
+                        </td>
+                        <th class="formTitle">性别</th>
+                        <td class="formValue">
+                            <select id="Gender" name="Gender" class="form-control required">
+                                <option value="true">男</option>
+                                <option value="false">女</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="formTitle">号别</th>
+                        <td class="formValue">
+                            <select id="Category" name="Category" class="form-control required">
+                                <option value="true">普通号</option>
+                                <option value="false">专家号</option>
+                            </select>
+                        </td>
+                        <th class="formTitle">职称</th>
+                        <td class="formValue">
+                            <input id="Title" name="Title" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" placeholder="请输入职称" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="formTitle">挂号费</th>
+                        <td class="formValue">
+                            <input id="Title" name="Title" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="请输入挂号费" />
+                        </td>
+                        <th class="formTitle"></th>
+                        <td class="formValue">
+                          
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="formTitle" valign="top" style="padding-top: 5px;">
+                            专长
+                        </th>
+                        <td class="formValue" colspan="3">
+                            <textarea id="Experties" name="Experties" class="form-control" isvalid="yes" checkexpession="NotNull" placeholder="请输入专长" style="height: 60px;"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="formTitle" valign="top" style="padding-top: 5px;">
+                            简介
+                        </th>
+                        <td class="formValue" colspan="3">
+                            <textarea id="Introduction" name="Introduction" class="form-control" isvalid="yes" checkexpession="NotNull" placeholder="请输入简介" style="height: 60px;"></textarea>
+                        </td>
+                    </tr>
+
+                </table>
+
             </div>
-            <div class="step-pane" id="step-2">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">出诊信息</h3>
-                    </div>
-                    <div class="panel-body" style="width: 98%;">
-                        <table class="form">
-                            <tr>
-                                <th class="formTitle">星期一</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="MondayMorning" name="MondayMorning" type="checkbox"><label for="MondayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="MondayAfternoon" name="MondayAfternoon" type="checkbox"><label for="MondayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="MondayNight" name="MondayNight" type="checkbox"><label for="MondayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="MondayStop" name="MondayStop" type="checkbox"><label for="MondayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="MondayMorningCount" name="MondayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="MondayAfternoonCount" name="MondayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="MondayNightCount" name="MondayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期二</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="TuesdayMorning" name="TuesdayMorning" type="checkbox"><label for="TuesdayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="TuesdayAfternoon" name="TuesdayAfternoon" type="checkbox"><label for="TuesdayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="TuesdayNight" name="TuesdayNight" type="checkbox"><label for="TuesdayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="TuesdayStop" name="TuesdayStop" type="checkbox"><label for="TuesdayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="TuesdayMorningCount" name="TuesdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="TuesdayAfternoonCount" name="TuesdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="TuesdayNightCount" name="TuesdayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期三</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="WednesdayMorning" name="WednesdayMorning" type="checkbox"><label for="WednesdayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="WednesdayAfternoon" name="WednesdayAfternoon" type="checkbox"><label for="WednesdayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="WednesdayNight" name="WednesdayNight" type="checkbox"><label for="WednesdayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="WednesdayStop" name="WednesdayStop" type="checkbox"><label for="WednesdayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="WednesdayMorningCount" name="WednesdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="WednesdayAfternoonCount" name="WednesdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="WednesdayNightCount" name="WednesdayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期四</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="ThursdayMorning" name="ThursdayMorning" type="checkbox"><label for="ThursdayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="ThursdayAfternoon" name="ThursdayAfternoon" type="checkbox"><label for="ThursdayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="ThursdayNight" name="ThursdayNight" type="checkbox"><label for="ThursdayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="ThursdayStop" name="ThursdayStop" type="checkbox"><label for="ThursdayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="ThursdayMorningCount" name="ThursdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="ThursdayAfternoonCount" name="ThursdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="ThursdayNightCount" name="ThursdayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期五</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="FridayMorning" name="FridayMorning" type="checkbox"><label for="FridayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="FridayAfternoon" name="FridayAfternoon" type="checkbox"><label for="FridayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="FridayNight" name="FridayNight" type="checkbox"><label for="FridayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="FridayStop" name="FridayStop" type="checkbox"><label for="FridayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="FridayMorningCount" name="FridayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="FridayAfternoonCount" name="FridayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="FridayNightCount" name="FridayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期六</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="SaturdayMorning" name="SaturdayMorning" type="checkbox"><label for="SaturdayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SaturdayAfternoon" name="SaturdayAfternoon" type="checkbox"><label for="SaturdayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SaturdayNight" name="SaturdayNight" type="checkbox"><label for="SaturdayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SaturdayStop" name="SaturdayStop" type="checkbox"><label for="SaturdayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="SaturdayMorningCount" name="SaturdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="SaturdayAfternoonCount" name="SaturdayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="SaturdayNightCount" name="SaturdayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="formTitle">星期日</th>
-                                <td class="formValue">
-                                    <div class="ckbox">
-                                        <input id="SundayMorning" name="SundayMorning" type="checkbox"><label for="SundayMorning">上午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SundayAfternoon" name="SundayAfternoon" type="checkbox"><label for="SundayAfternoon">下午</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SundayNight" name="SundayNight" type="checkbox"><label for="SundayNight">晚上</label>
-                                    </div>
-                                    <div class="ckbox">
-                                        <input id="SundayStop" name="SundayStop" type="checkbox"><label for="SundayStop">停诊</label>
-                                    </div>
-                                </td>
-                                <th class="formTitle">
-                                    <input id="SundayMorningCount" name="SundayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </th>
-                                <td class="formTitle">
-                                    <input id="SundayAfternoonCount" name="SundayMorningCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                                <td class="formTitle">
-                                    <input id="SundayNightCount" name="SundayNightCount" type="text" class="form-control required" placeholder="数量" />
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+            <div class="step-pane" id="step-2" style="padding-top: 20px; margin-right: 40px;">
+                <table class="form">
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期一</th>
+                        <td class="formValue">
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="MondayMorning" name="MondayMorning" type="checkbox"><label for="MondayMorning">上午</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="MondayAfternoon" name="MondayAfternoon" type="checkbox"><label for="MondayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="MondayNight" name="MondayNight" type="checkbox"><label for="MondayNight">晚上</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="MondayStop" name="MondayStop" type="checkbox"><label for="MondayStop">停诊</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期二</th>
+                        <td class="formValue">
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="TuesdayMorning" name="TuesdayMorning" type="checkbox"><label for="TuesdayMorning">上午</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="TuesdayAfternoon" name="TuesdayAfternoon" type="checkbox"><label for="TuesdayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="TuesdayNight" name="TuesdayNight" type="checkbox"><label for="TuesdayNight">晚上</label>
+                            </div>
+                            <div class="ckbox" style="padding-top: 1px;">
+                                <input id="TuesdayStop" name="TuesdayStop" type="checkbox"><label for="TuesdayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期三</th>
+                        <td class="formValue">
+                            <div class="ckbox">
+                                <input id="WednesdayMorning" name="WednesdayMorning" type="checkbox"><label for="WednesdayMorning">上午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="WednesdayAfternoon" name="WednesdayAfternoon" type="checkbox"><label for="WednesdayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="WednesdayNight" name="WednesdayNight" type="checkbox"><label for="WednesdayNight">晚上</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="WednesdayStop" name="WednesdayStop" type="checkbox"><label for="WednesdayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期四</th>
+                        <td class="formValue">
+                            <div class="ckbox">
+                                <input id="ThursdayMorning" name="ThursdayMorning" type="checkbox"><label for="ThursdayMorning">上午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="ThursdayAfternoon" name="ThursdayAfternoon" type="checkbox"><label for="ThursdayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="ThursdayNight" name="ThursdayNight" type="checkbox"><label for="ThursdayNight">晚上</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="ThursdayStop" name="ThursdayStop" type="checkbox"><label for="ThursdayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期五</th>
+                        <td class="formValue">
+                            <div class="ckbox">
+                                <input id="FridayMorning" name="FridayMorning" type="checkbox"><label for="FridayMorning">上午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="FridayAfternoon" name="FridayAfternoon" type="checkbox"><label for="FridayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="FridayNight" name="FridayNight" type="checkbox"><label for="FridayNight">晚上</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="FridayStop" name="FridayStop" type="checkbox"><label for="FridayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期六</th>
+                        <td class="formValue">
+                            <div class="ckbox">
+                                <input id="SaturdayMorning" name="SaturdayMorning" type="checkbox"><label for="SaturdayMorning">上午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SaturdayAfternoon" name="SaturdayAfternoon" type="checkbox"><label for="SaturdayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SaturdayNight" name="SaturdayNight" type="checkbox"><label for="SaturdayNight">晚上</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SaturdayStop" name="SaturdayStop" type="checkbox"><label for="SaturdayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <th class="formTitle" style="height: 35px;">星期日</th>
+                        <td class="formValue">
+                            <div class="ckbox">
+                                <input id="SundayMorning" name="SundayMorning" type="checkbox"><label for="SundayMorning">上午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SundayAfternoon" name="SundayAfternoon" type="checkbox"><label for="SundayAfternoon">下午</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SundayNight" name="SundayNight" type="checkbox"><label for="SundayNight">晚上</label>
+                            </div>
+                            <div class="ckbox">
+                                <input id="SundayStop" name="SundayStop" type="checkbox"><label for="SundayStop">停诊</label>
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+            <div class="step-pane" id="step-3" style="padding-top: 20px; margin-right: 40px;">
+                <table class="form">
+                    <tbody>
+                        <tr>
+                            <th class="formTitle">时间段</th>
+                            <td class="formValue">
+                                <div style="float: left; width: 45%;">
+                                    <input id="StartTime1" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                </div>
+                                <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>
+                                <div style="float: left; width: 45%;">
+                                    <input id="EndTime1" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                </div>
+                            </td>
+                            <th class="formTitle">预约数量</th>
+                            <td class="formValue">
+                                <div style="float: left; width: 50%;">
+                                    <input id="OrderCount1" name="OrderCount1" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约数量" />
+                                </div>
+                                <div style="float: left; width: 40%; margin-left:20px;">
+                                    <a class="btn btn-success addSegmentation"><i class="fa fa-plus"></i>&nbsp;添加</a>
+                                    <a class="btn btn-danger addSegmentation"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="step-pane" id="step-4" style="padding-top: 20px; margin-right: 40px;">
+                <table class="form">
+                    <tr>
+                        <th class="formTitle">上班时间</th>
+                        <td class="formValue">
+                            <div style="float: left; width: 45%;">
+                                <input id="StartTime2" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                            </div>
+                            <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>
+                            <div style="float: left; width: 45%;">
+                                <input id="EndTime2" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                            </div>
+                        </td>
+                        <th class="formTitle">分段数量</th>
+                        <td class="formValue">
+                            <div style="float: left; width: 25%;">
+                                <input id="OrderCount1" name="OrderCount1" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约数量" />
+                            </div>
+                            <div style="float: left; width: 20%; text-align:center;line-height:35px;  height:35px">预约人数</div>
+                            <div style="float: left; width: 25%;">
+                                <input id="OrderCount1" name="OrderCount1" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约数量" />
+                            </div>
+                            <div style="float: left; width: 20%; margin-left:20px;">
+                                <a class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;添加</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="step-pane" id="step-5" style="padding-top: 20px; margin-right: 40px;">
+                <table class="form">
+                    <tr>
+                        <th class="formTitle">时间段</th>
+                        <td class="formValue">
+                            <div style="float: left; width: 45%;">
+                                <input id="StartTime3" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                            </div>
+                            <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>
+                            <div style="float: left; width: 45%;">
+                                <input id="EndTime3" readonly type="text" value="8:30" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                            </div>
+                        </td>
+                        <th class="formTitle">预约数量</th>
+                        <td class="formValue">
+                            <div style="float: left; width: 70%;">
+                                <input id="OrderCount1" name="OrderCount1" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约数量" />
+                            </div>
+                            <div style="float: left; width: 20%; margin-left:20px;">
+                                <a class="btn btn-success"><i class="fa fa-plus"></i>&nbsp;添加</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
         <div class="form-button" id="wizard-actions">
