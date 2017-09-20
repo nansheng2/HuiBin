@@ -147,13 +147,13 @@
         segmentationChange("NightSegmentationCount", "NightCreate");
 
         //上午
-        morningCreate("step-3", "MorningCreate", "MorningStartTime", "MorningEndTime", "MorningSegmentationCount", "MorningOrderCount");
+        morningCreate("step-3", "MorningCreate", "MorningStartTime", "MorningEndTime", "MorningSegmentationCount", "MorningOrderCount","Morning","1");
 
         //下午
-        morningCreate("step-4", "AfternoonCreate", "AfternoonStartTime", "AfternoonEndTime", "AfternoonSegmentationCount", "AfternoonOrderCount"); 
+        morningCreate("step-4", "AfternoonCreate", "AfternoonStartTime", "AfternoonEndTime", "AfternoonSegmentationCount", "AfternoonOrderCount", "Afternoon", "2"); 
 
         //晚上
-        morningCreate("step-5", "NightCreate", "NightStartTime", "NightEndTime", "NightSegmentationCount", "NightOrderCount");
+        morningCreate("step-5", "NightCreate", "NightStartTime", "NightEndTime", "NightSegmentationCount", "NightOrderCount", "Night", "3");
 
         $("#F_OrganizeId").bindSelect({
             url: "/SystemManage/Organize/GetTreeSelectJson",
@@ -218,9 +218,9 @@
     function submitForm() {
 
         var postData = $("#form1").formSerialize();
-        postData["permissionIds"] = String($("#permissionTree").getCheckedNodes());
+     //   postData["permissionIds"] = String($("#permissionTree").getCheckedNodes());
         $.submitForm({
-            url: "/SystemManage/Role/SubmitForm?keyValue=" + keyValue,
+            url: "/HospitalManage/Doctor/SubmitForm?keyValue=" + keyValue,
             param: postData,
             success: function () {
                 $.currentWindow().$("#gridList").trigger("reloadGrid");
@@ -248,7 +248,7 @@
     }
 
     //生成出生坐诊
-    function morningCreate(stepId, createId, startTimeId, endTimeId, segmentationCountId, orderCountId) {
+    function morningCreate(stepId, createId, startTimeId, endTimeId, segmentationCountId, orderCountId,dayType,orderTimeType) {
         $("#" + createId).click(function () {
 
             //表格
@@ -259,21 +259,21 @@
             var segmentationCount = parseInt($("#" + segmentationCountId).val());
             var orderCount = parseInt($("#" + orderCountId).val());
 
-            var tr = "<tr>";
+            var tr = "<tr> <input hidden=\"hidden\" id=\"" + dayType+"SegmentationOrderList[{0}].OrderTimeType\" name=\""+ dayType+"SegmentationOrderList[{0}].OrderTimeType\" value=\""+ orderTimeType+"\" />";
             tr += "  <th class=\"formTitle\"> 时间段</th>";
             tr += "        <td class=\"formValue\">";
             tr += "            <div style=\"float: left; width: 45%;\">";
-            tr += "                 <input id=\"StartTime1\" readonly type=\"text\" value=\"{0}\" class=\"form-control input-wdatepicker\" isvalid=\"yes\" checkexpession=\"NotNull\" onfocus=\"WdatePicker({ dateFmt: 'HH:mm' })\">";
+            tr += "                 <input id=\"" + dayType + "SegmentationOrderList[{0}].BeginTime\" name=\"" + dayType +"SegmentationOrderList[{0}].BeginTime\" readonly type=\"text\" value=\"{1}\" class=\"form-control input-wdatepicker\" isvalid=\"yes\" checkexpession=\"NotNull\" onfocus=\"WdatePicker({ dateFmt: 'HH:mm' })\">";
             tr += "                     </div>";
             tr += "                 <div style=\"float: left; width: 10%; text-align:center; line-height:35px; height: 35px\">至</div>";
             tr += "                <div style=\"float: left; width: 45%;\">";
-            tr += "                    <input id=\"EndTime1\" readonly type=\"text\" value=\"{1}\" class=\"form-control input-wdatepicker\" isvalid=\"yes\" checkexpession=\"NotNull\" onfocus=\"WdatePicker({ dateFmt: 'HH:mm' })\">";
+            tr += "                    <input id=\"" + dayType + "SegmentationOrderList[{0}].EndTime\" name=\"" + dayType +"SegmentationOrderList[{0}].EndTime\" readonly type=\"text\" value=\"{2}\" class=\"form-control input-wdatepicker\" isvalid=\"yes\" checkexpession=\"NotNull\" onfocus=\"WdatePicker({ dateFmt: 'HH:mm' })\">";
             tr += "                    </div>";
             tr += "                </td>";
             tr += "                <th class=\"formTitle\">预约数量</th>";
             tr += "                <td class=\"formValue\">";
             tr += "                     <div style=\"float: left; width: 20%;\">";
-            tr += "                        <input id=\"SegmentationCount\" value=\"{2}\" name=\"SegmentCount\" type=\"text\" class=\"form-control\" isvalid=\"yes\" checkexpession=\"Num\" placeholder=\"预约数量\" />";
+            tr += "                        <input id=\"" + dayType + "SegmentationOrderList[{0}].OrderCount\" value=\"{3}\" name=\"" + dayType +"SegmentationOrderList[{0}].OrderCount\" type=\"text\" class=\"form-control\" isvalid=\"yes\" checkexpession=\"Num\" placeholder=\"预约数量\" />";
             tr += "                     </div>";
             tr += "                 </td>";
             tr += "            </tr>";
@@ -303,7 +303,7 @@
                 for (var i = 0; i < segmentationCount; i++) {
 
                     //设置每一个分段
-                    var temptr = String.format(tr, begin.Format("hh:mm"), dateAdd(begin, "minute", segmentationMinutes).Format("hh:mm"), count);
+                    var temptr = String.format(tr,i, begin.Format("hh:mm"), dateAdd(begin, "minute", segmentationMinutes).Format("hh:mm"), count);
 
                     //$("#tbData tr").eq(-2)
                     $("#" + stepId +" tbody tr").last().after(temptr);
@@ -362,7 +362,7 @@
                     <tr>
                         <th class="formTitle">挂号费</th>
                         <td class="formValue">
-                            <input id="Title" name="Title" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="请输入挂号费" />
+                            <input id="Price" name="Price" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="请输入挂号费" />
                         </td>
                         <th class="formTitle"></th>
                         <td class="formValue"></td>
@@ -517,9 +517,11 @@
                 </table>
             </div>
             <div class="step-pane" id="step-3" style="padding-top: 20px; margin-right: 40px;">
+                
                 <table class="form">
                     <tbody>
                         <tr class="first">
+                            
                             <th class="formTitle">上班时间</th>
                             <td class="formValue">
                                 <div style="float: left; width: 45%;">
@@ -533,11 +535,11 @@
                             <th class="formTitle">分段量</th>
                             <td class="formValue">
                                 <div style="float: left; width: 20%;">
-                                    <input id="MorningSegmentationCount" name="SegmentCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
+                                    <input id="MorningSegmentationCount" name="MorningSegmentationCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
                                 </div>
                                 <div style="float: left; width: 20%; text-align:center;line-height:35px;  height:35px">预约总数</div>
                                 <div style="float: left; width: 20%; margin-left:20px;">
-                                    <input id="MorningOrderCount" name="OrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
+                                    <input id="MorningOrderCount" name="MorningOrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
                                 </div>
                                 <div style="float: left; width: 20%; margin-left:20px;">
                                     <a id="MorningCreate" class="btn  btn-success disabled"><i class="fa fa-plus"></i>&nbsp;生成坐诊</a>
@@ -548,26 +550,27 @@
                 </table>
             </div>
             <div class="step-pane" id="step-4" style="padding-top: 20px; margin-right: 40px;">
+            
                 <table class="form">
                     <tr class="first">
                         <th class="formTitle">上班时间</th>
                         <td class="formValue">
                             <div style="float: left; width: 45%;">
-                                <input id="AfternoonStartTime" readonly type="text" value="14:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                <input id="AfternoonStartTime" name="AfternoonStartTime" readonly type="text" value="14:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
                             </div>
                             <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>
                             <div style="float: left; width: 45%;">
-                                <input id="AfternoonEndTime" readonly type="text" value="18:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                <input id="AfternoonEndTime" name="AfternoonEndTime" readonly type="text" value="18:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
                             </div>
                         </td>
                         <th class="formTitle">分段量</th>
                         <td class="formValue">
                             <div style="float: left; width: 20%;">
-                                <input id="AfternoonSegmentationCount" name="SegmentCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
+                                <input id="AfternoonSegmentationCount" name="AfternoonSegmentationCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
                             </div>
                             <div style="float: left; width: 20%; text-align:center;line-height:35px;  height:35px">预约总数</div>
                             <div style="float: left; width: 20%; margin-left:20px;">
-                                <input id="AfternoongOrderCount" name="OrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
+                                <input id="AfternoonOrderCount" name="AfternoonOrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
                             </div>
                             <div style="float: left; width: 20%; margin-left:20px;">
                                 <a id="AfternoonCreate" class="btn  btn-success disabled"><i class="fa fa-plus"></i>&nbsp;生成坐诊</a>
@@ -582,21 +585,21 @@
                         <th class="formTitle">上班时间</th>
                         <td class="formValue">
                             <div style="float: left; width: 45%;">
-                                <input id="NightStartTime" readonly type="text" value="19:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                <input id="NightStartTime" name="NightStartTime" readonly type="text" value="19:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
                             </div>
                             <div style="float: left; width: 10%; text-align:center;line-height:35px;  height:35px">至</div>
                             <div style="float: left; width: 45%;">
-                                <input id="NightEndTime" readonly type="text" value="22:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
+                                <input id="NightEndTime" name="NightEndTime"  readonly type="text" value="22:00" class="form-control input-wdatepicker" isvalid="yes" checkexpession="NotNull" onfocus="WdatePicker({dateFmt:'HH:mm'})">
                             </div>
                         </td>
                         <th class="formTitle">分段量</th>
                         <td class="formValue">
                             <div style="float: left; width: 20%;">
-                                <input id="NightSegmentationCount" name="SegmentCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
+                                <input id="NightSegmentationCount" name="NightSegmentationCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="0为依次" />
                             </div>
                             <div style="float: left; width: 20%; text-align:center;line-height:35px;  height:35px">预约总数</div>
                             <div style="float: left; width: 20%; margin-left:20px;">
-                                <input id="NightOrderCount" name="OrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
+                                <input id="NightOrderCount" name="NightOrderCount" type="text" class="form-control" isvalid="yes" checkexpession="Num" placeholder="预约总数" />
                             </div>
                             <div style="float: left; width: 20%; margin-left:20px;">
                                 <a id="NightCreate" class="btn  btn-success disabled"><i class="fa fa-plus"></i>&nbsp;生成坐诊</a>
