@@ -14,6 +14,10 @@ namespace NFine.Repository.SystemManage
 {
     public class RoleRepository : RepositoryBase<RoleEntity>, IRoleRepository
     {
+        /// <summary>
+        /// 删除操作
+        /// </summary>
+        /// <param name="keyValue">key</param>
         public void DeleteForm(string keyValue)
         {
             using (var db = new RepositoryBase().BeginTrans())
@@ -23,6 +27,14 @@ namespace NFine.Repository.SystemManage
                 db.Commit();
             }
         }
+        
+
+        /// <summary>
+        /// 保存操作
+        /// </summary>
+        /// <param name="roleEntity">entity</param>
+        /// <param name="roleAuthorizeEntitys"></param>
+        /// <param name="keyValue">key</param>
         public void SubmitForm(RoleEntity roleEntity, List<RoleAuthorizeEntity> roleAuthorizeEntitys, string keyValue)
         {
             using (var db = new RepositoryBase().BeginTrans())

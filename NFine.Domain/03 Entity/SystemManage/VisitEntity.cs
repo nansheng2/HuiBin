@@ -1,14 +1,72 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace NFine.Domain.Entity.SystemManage
 {
     /// <summary>
-    /// 医生表
+    /// 出诊信息
     /// </summary>
-    public  class DoctorEntity : IEntity<DoctorEntity>
+    public  class VisitEntity :IEntity<VisitEntity>
     {
+        /// <summary>
+        /// 出诊Id
+        /// </summary>
+        public int VisitId
+        {
+            get;
+            set;
+        }  
     
         /// <summary>
-        /// 医生ID
+        /// 星期
+        /// </summary>
+        public int Week
+        {
+            get;
+            set;
+        }  
+    
+        /// <summary>
+        /// 上午
+        /// </summary>
+        public bool Morning
+        {
+            get;
+            set;
+        }  
+    
+        /// <summary>
+        /// 下午
+        /// </summary>
+        public bool Afternoon
+        {
+            get;
+            set;
+        }  
+    
+        /// <summary>
+        /// 晚上
+        /// </summary>
+        public bool Night
+        {
+            get;
+            set;
+        }  
+    
+        /// <summary>
+        /// 停诊
+        /// </summary>
+        public bool Stop
+        {
+            get;
+            set;
+        }  
+    
+        /// <summary>
+        /// 医生Id
         /// </summary>
         public int DoctorId
         {
@@ -17,104 +75,40 @@ namespace NFine.Domain.Entity.SystemManage
         }  
     
         /// <summary>
-        /// 医生姓名
+        /// 上午预约数量
         /// </summary>
-        public string DoctorName
+        public int MorningCount
         {
             get;
             set;
         }  
     
         /// <summary>
-        /// 专长
+        /// 下午预约数量
         /// </summary>
-        public string GootAt
+        public int AfternoonCount
         {
             get;
             set;
         }  
     
         /// <summary>
-        /// 头像
+        /// 晚上预约数量
         /// </summary>
-        public string Avatar
+        public int NightCount
         {
             get;
             set;
         }  
     
         /// <summary>
-        /// 职称
-        /// </summary>
-        public string Title
-        {
-            get;
-            set;
-        }  
-    
-        /// <summary>
-        /// 简介
-        /// </summary>
-        public string Introduction
-        {
-            get;
-            set;
-        }  
-    
-        /// <summary>
-        /// 预约周期
-        /// </summary>
-        public int OrderCycle
-        {
-            get;
-            set;
-        }  
-    
-        /// <summary>
-        /// 性别
-        /// </summary>
-        public bool Gender
-        {
-            get;
-            set;
-        }  
-    
-        /// <summary>
-        /// 预约类型 1:依次 2:分时段预约
-        /// </summary>
-        public bool OrderType
-        {
-            get;
-            set;
-        }  
-    
-        /// <summary>
-        /// 
+        /// 添加时间
         /// </summary>
         public DateTime AddDate
         {
             get;
             set;
         }  
-
-        /// <summary>
-        /// 挂号费
-        /// </summary>
-        public float Price
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 号别
-        /// </summary>
-        public bool Category
-        {
-            get;
-            set;
-        }
-
-
+    
     }
 }

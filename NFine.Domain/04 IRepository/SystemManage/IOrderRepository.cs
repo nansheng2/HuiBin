@@ -1,14 +1,14 @@
 ﻿using NFine.Data;
 using NFine.Domain.Entity.SystemManage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NFine.Domain.IRepository.SystemManage;
 
-namespace NFine.Domain.IRepository.SystemManage
+namespace NFine.IRepository.SystemManage
 {
+    /// <summary>
+    /// 预约表
+    /// </summary>
     public interface IOrderRepository : IRepositoryBase<OrderEntity>
     {
+    
     }
 }

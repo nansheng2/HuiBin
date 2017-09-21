@@ -1,14 +1,14 @@
 ﻿using NFine.Data;
 using NFine.Domain.Entity.SystemManage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NFine.Domain.IRepository.SystemManage;
 
-namespace NFine.Domain.IRepository.SystemManage
+namespace NFine.IRepository.SystemManage
 {
-    interface IMemberRepository : IRepositoryBase<MemberEntity>
+    /// <summary>
+    /// 会员表
+    /// </summary>
+    public interface IMemberRepository : IRepositoryBase<MemberEntity>
     {
+    
     }
 }

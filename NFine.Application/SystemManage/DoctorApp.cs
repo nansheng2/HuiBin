@@ -1,52 +1,39 @@
 ﻿using NFine.Code;
 using NFine.Domain.Entity.SystemManage;
 using NFine.Domain.IRepository.SystemManage;
+using NFine.Domain.ViewModel;
+using NFine.IRepository.SystemManage;
 using NFine.Repository.SystemManage;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NFine.Application.SystemManage
 {
     public class DoctorApp
     {
-        private IRoleRepository service = new RoleRepository();
+        private IDoctorRepository service = new DoctorRepository();
         private ModuleApp moduleApp = new ModuleApp();
         private ModuleButtonApp moduleButtonApp = new ModuleButtonApp();
 
-        public void SubmitForm(RoleEntity roleEntity, string[] permissionIds, string keyValue)
+        /// <summary>
+        /// 保存事件
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="permissionIds"></param>
+        /// <param name="keyValue"></param>
+        public void SubmitForm(DoctorViewModel entity)
         {
-            if (!string.IsNullOrEmpty(keyValue))
+            service.SubmitForm(entity);
+        }
+
+        public List<DoctorEntity> GetList(Pagination pagination, string keyword)
+        {
+            var expression = ExtLinq.True<DoctorEntity>();
+            if (!string.IsNullOrEmpty(keyword))
             {
-                roleEntity.F_Id = keyValue;
+                expression = expression.And(t => t.DoctorName.Contains(keyword));
             }
-            else
-            {
-                roleEntity.F_Id = Common.GuId();
-            }
-            var moduledata = moduleApp.GetList();
-            var buttondata = moduleButtonApp.GetList();
-            List<RoleAuthorizeEntity> roleAuthorizeEntitys = new List<RoleAuthorizeEntity>();
-            foreach (var itemId in permissionIds)
-            {
-                RoleAuthorizeEntity roleAuthorizeEntity = new RoleAuthorizeEntity();
-                roleAuthorizeEntity.F_Id = Common.GuId();
-                roleAuthorizeEntity.F_ObjectType = 1;
-                roleAuthorizeEntity.F_ObjectId = roleEntity.F_Id;
-                roleAuthorizeEntity.F_ItemId = itemId;
-                if (moduledata.Find(t => t.F_Id == itemId) != null)
-                {
-                    roleAuthorizeEntity.F_ItemType = 1;
-                }
-                if (buttondata.Find(t => t.F_Id == itemId) != null)
-                {
-                    roleAuthorizeEntity.F_ItemType = 2;
-                }
-                roleAuthorizeEntitys.Add(roleAuthorizeEntity);
-            }
-            service.SubmitForm(roleEntity, roleAuthorizeEntitys, keyValue);
+            return service.FindList(expression, pagination);
         }
     }
 }

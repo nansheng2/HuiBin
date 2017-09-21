@@ -54,11 +54,20 @@ namespace NFine.Domain.Entity.SystemManage
         /// <summary>
         /// 添加时间
         /// </summary>
-        public DateTime? AddDate
+        public DateTime AddDate
         {
             get;
             set;
-        }  
-    
+        }
+
+        /// <summary>
+        /// 医生Id
+        /// </summary>
+        public int DoctorId
+        {
+            get;
+            set;
+        }
+
     }
 }

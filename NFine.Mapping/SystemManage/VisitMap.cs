@@ -4,14 +4,14 @@ using System.Data.Entity.ModelConfiguration;
 namespace NFine.Mapping.SystemManage
 {
     /// <summary>
-    /// 预约表
+    /// 出诊信息
     /// </summary>
-    public class OrderMap : EntityTypeConfiguration<OrderEntity>
+    public class VisitMap : EntityTypeConfiguration<VisitEntity>
     {
-        public OrderMap()
+        public VisitMap()
         {
-            this.ToTable("Order");
-            this.HasKey(t => t.OrderId);
+            this.ToTable("Visit");
+            this.HasKey(t => t.VisitId);
         }
     }
 }

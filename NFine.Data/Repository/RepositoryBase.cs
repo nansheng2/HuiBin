@@ -39,7 +39,7 @@ namespace NFine.Data
         {
             try
             {
-                var returnValue = dbcontext.SaveChanges();
+                var returnValue = 1; 
                 if (dbTransaction != null)
                 {
                     dbTransaction.Commit();
@@ -70,6 +70,7 @@ namespace NFine.Data
         public int Insert<TEntity>(TEntity entity) where TEntity : class
         {
             dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
+            dbcontext.SaveChanges();
             return dbTransaction == null ? this.Commit() : 0;
         }
         public int Insert<TEntity>(List<TEntity> entitys) where TEntity : class
@@ -78,6 +79,7 @@ namespace NFine.Data
             {
                 dbcontext.Entry<TEntity>(entity).State = EntityState.Added;
             }
+            dbcontext.SaveChanges();
             return dbTransaction == null ? this.Commit() : 0;
         }
         public int Update<TEntity>(TEntity entity) where TEntity : class
@@ -93,18 +95,21 @@ namespace NFine.Data
                     dbcontext.Entry(entity).Property(prop.Name).IsModified = true;
                 }
             }
+            dbcontext.SaveChanges();
             return dbTransaction == null ? this.Commit() : 0;
         }
         public int Delete<TEntity>(TEntity entity) where TEntity : class
         {
             dbcontext.Set<TEntity>().Attach(entity);
             dbcontext.Entry<TEntity>(entity).State = EntityState.Deleted;
+            dbcontext.SaveChanges();
             return dbTransaction == null ? this.Commit() : 0;
         }
         public int Delete<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : class
         {
             var entitys = dbcontext.Set<TEntity>().Where(predicate).ToList();
             entitys.ForEach(m => dbcontext.Entry<TEntity>(m).State = EntityState.Deleted);
+            dbcontext.SaveChanges();
             return dbTransaction == null ? this.Commit() : 0;
         }
         public TEntity FindEntity<TEntity>(object keyValue) where TEntity : class

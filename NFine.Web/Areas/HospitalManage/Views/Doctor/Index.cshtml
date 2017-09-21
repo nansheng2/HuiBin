@@ -9,14 +9,14 @@
     function gridList() {
         var $gridList = $("#gridList");
         $gridList.dataGrid({
-            url: "/SystemManage/User/GetGridJson",
+            url: "/HospitalManage/Doctor/GetGridJson",
             height: $(window).height() - 128,
             colModel: [
-                { label: '主键', name: 'F_Id', hidden: true },
+                { label: '主键', name: 'DoctorId', hidden: true },
                 //{ label: '账户', name: 'F_Account', width: 80, align: 'left' },
-                { label: '姓名', name: 'F_RealName', align: 'left' },
+                { label: '姓名', name: 'DoctorName', width: 80, align: 'left' },
                 {
-                    label: '性别', name: 'F_Gender', align: 'center',
+                    label: '性别', name: 'Gender', width: 40, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
                         if (cellvalue == true) {
                             return '男';
@@ -25,26 +25,27 @@
                         }
                     }
                 },
-                { label: '职称', name: 'F_MobilePhone', align: 'left' },
+                { label: '职称', name: 'Title', width: 80, align: 'left' },
                 {
-                    label: '专长', name: 'F_OrganizeId', align: 'left',
+                    label: '号别', name: 'Category', width: 80, align: 'center',
                     formatter: function (cellvalue, options, rowObject) {
-                        return top.clients.organize[cellvalue] == null ? "" : top.clients.organize[cellvalue].fullname;
+                        if (cellvalue == true) {
+                            return '普通号';
+                        } else {
+                            return '专家号';
+                        }
                     }
                 },
+                { label: '挂号费', name: 'Price', width: 80, align: 'left' },
+                { label: '专长', name: 'GootAt', width: 240, align: 'left' },
+                { label: '简介', name: 'Introduction', width: 240, align: 'left' },
                 {
-                    label: '部门', name: 'F_DepartmentId', align: 'left',
-                    formatter: function (cellvalue, options, rowObject) {
-                        return top.clients.organize[cellvalue] == null ? "" : top.clients.organize[cellvalue].fullname;
-                    }
-                },
-                {
-                    label: '创建时间', name: 'F_CreatorTime', align: 'left',
+                    label: '创建时间', name: 'AddDate', width: 60, align: 'left',
                     formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
                 }
             ],
             pager: "#gridPager",
-            sortname: 'F_DepartmentId asc,F_CreatorTime desc',
+            sortname: 'DoctorId asc,AddDate desc',
             viewrecords: true
         });
         $("#btn_search").click(function () {
