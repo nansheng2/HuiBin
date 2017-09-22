@@ -6,6 +6,8 @@ using NFine.IRepository.SystemManage;
 using NFine.Repository.SystemManage;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace NFine.Application.SystemManage
 {
@@ -34,6 +36,11 @@ namespace NFine.Application.SystemManage
                 expression = expression.And(t => t.DoctorName.Contains(keyword));
             }
             return service.FindList(expression, pagination);
+        }
+
+        public IQueryable<DoctorEntity> GetList(Expression<Func<DoctorEntity, bool>> predicate)
+        {
+            return service.IQueryable(predicate);
         }
     }
 }

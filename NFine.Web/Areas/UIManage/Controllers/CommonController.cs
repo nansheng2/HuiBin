@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NFine.Application.SystemManage;
+using NFine.Code;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,11 +12,7 @@ namespace NFine.Web.Areas.UIManage.Controllers
     {
         //
         // GET: /UIManage/Common/
-
-        public ActionResult Index()
-        {
-            return View();
-        }
+     
 
     }
 }

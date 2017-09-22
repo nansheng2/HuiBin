@@ -145,6 +145,10 @@
     <Compile Include="Areas\SystemSecurity\Controllers\LogController.cs" />
     <Compile Include="Areas\SystemSecurity\Controllers\ServerMonitoringController.cs" />
     <Compile Include="Areas\SystemSecurity\SystemSecurityAreaRegistration.cs" />
+    <Compile Include="Areas\UIManage\UIManageAreaRegistration.cs" />
+    <Compile Include="Areas\UIManage\Controllers\CommonController.cs" />
+    <Compile Include="Areas\UIManage\Controllers\DoctorController.cs" />
+    <Compile Include="Areas\UIManage\Controllers\OrderController.cs" />
     <Compile Include="Controllers\ClientsDataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />

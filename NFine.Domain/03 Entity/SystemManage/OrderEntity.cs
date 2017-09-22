@@ -62,6 +62,14 @@ namespace NFine.Domain.Entity.SystemManage
             get;
             set;
         }  
-    
+
+        /// <summary>
+        /// 患者Id
+        /// </summary>
+        public int MemberId
+        {
+            get;
+            set;
+        }
     }
 }
