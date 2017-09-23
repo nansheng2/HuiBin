@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace NFine.Web.Areas.UIManage.Controllers
 {
-    public class CommonController : ControllerBase
+    public class CommonController : Controller
     {
         ItemsDetailApp itemsDetailApp = new ItemsDetailApp();
         //

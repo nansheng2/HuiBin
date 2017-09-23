@@ -11,7 +11,7 @@ using NFine.Domain.Entity.SystemManage;
 
 namespace NFine.Web.Areas.UIManage.Controllers
 {
-    public class DoctorController : ControllerBase
+    public class DoctorController : Controller
     {
         //
         // GET: /UIManage/Doctor/
