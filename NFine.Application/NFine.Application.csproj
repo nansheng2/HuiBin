@@ -48,6 +48,7 @@
     <Compile Include="SystemManage\DoctorApp.cs" />
     <Compile Include="SystemManage\ItemsApp.cs" />
     <Compile Include="SystemManage\ItemsDetailApp.cs" />
+    <Compile Include="SystemManage\MemberApp.cs" />
     <Compile Include="SystemManage\ModuleApp.cs" />
     <Compile Include="SystemManage\ModuleButtonApp.cs" />
     <Compile Include="SystemManage\AreaApp.cs" />

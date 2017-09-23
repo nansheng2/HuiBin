@@ -19,6 +19,7 @@ namespace NFine.Web.Areas.UIManage.Controllers
         private DoctorApp doctorApp = new DoctorApp();
         private VisitApp visitApp = new VisitApp();
         private OrderApp orderApp = new OrderApp();
+        private MemberApp memberApp = new MemberApp();
         private SegmentationOrderApp segmentationOrderApp = new SegmentationOrderApp();
 
 
@@ -401,7 +402,7 @@ namespace NFine.Web.Areas.UIManage.Controllers
         [HandlerAjaxOnly]
         public ActionResult UserOder(UserOderRequest request)
         {
-            ResponseBase<GetDoctorInfoResponse> response = new ResponseBase<GetDoctorInfoResponse>();
+            ResponseBase<AddOrderResponse> response = new ResponseBase<AddOrderResponse>();
             response.IsSuccess = false;
             response.Reason = "系统出错，请联系管理员";
 
@@ -486,11 +487,141 @@ namespace NFine.Web.Areas.UIManage.Controllers
                 return Content(response.ToJson());
             }
 
+            //预约医生Id
+            if (request.OrderDoctorId < 1)
+            {
+                response.IsSuccess = false;
+                response.Reason = "国籍输入不正确";
+                return Content(response.ToJson());
+            }
+
+            //预约时间
+            if (request.OrderDateTime == null || request.OrderDateTime == DateTime.MinValue)
+            {
+                response.IsSuccess = false;
+                response.Reason = "预约时间输入不正确";
+                return Content(response.ToJson());
+            }
+
+            //预约时间类型
+            if ((int)request.OrderDateTimeType < 1|| (int)request.OrderDateTimeType>3)
+            {
+                response.IsSuccess = false;
+                response.Reason = "预约时间类型不正确";
+                return Content(response.ToJson());
+            }
+
+            //预约类型
+            if ((int)request.OrderType < 1|| (int)request.OrderType>2)
+            {
+                response.IsSuccess = false;
+                response.Reason = "预约类型不正确";
+                return Content(response.ToJson());
+            }
+
             #endregion
 
             try
             {
-             
+                OrderViewModel orderViewModel = new OrderViewModel();
+                orderViewModel.CredentialInformation = request.CredentialInformation;
+                orderViewModel.CredentialType = request.CredentialType;
+                orderViewModel.FullName = request.FullName;
+                orderViewModel.VisitingCardNumber = request.VisitingCardNumber;
+                orderViewModel.Gender = request.Gender;
+                orderViewModel.DateOfBirth = request.DateOfBirth;
+                orderViewModel.ContactNumber = request.ContactNumber;
+                orderViewModel.Email = request.Email;
+                orderViewModel.Nationality = request.Nationality;
+                orderViewModel.SymptomDescription = request.SymptomDescription;
+                orderViewModel.OrderDateTime = request.OrderDateTime;
+                orderViewModel.OrderDateTimeType = request.OrderDateTimeType;
+                orderViewModel.OrderType = request.OrderType;
+                orderViewModel.BeginTime = request.BeginTime;
+                orderViewModel.EndTime = request.EndTime;
+                var orderResonse = orderApp.AddOrder(orderViewModel);
+
+                response.IsSuccess = true;
+                response.Result = orderResonse;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Content(response.ToJson());
+        }
+
+        /// <summary>
+        /// 用户预约
+        /// </summary>
+        /// <param name="request">参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [HandlerAjaxOnly]
+        public ActionResult GetOrderList(GetOrderListRequest request)
+        {
+            ResponseBase<List<GetOrderListResponse>> response = new ResponseBase<List<GetOrderListResponse>>();
+            response.IsSuccess = false;
+            response.Reason = "系统出错，请联系管理员";
+            List<GetOrderListResponse> list = new List<GetOrderListResponse>();
+            #region 验证
+            if (request == null)
+            {
+                response.IsSuccess = false;
+                response.Reason = "参数不能为空";
+                return Content(response.ToJson());
+            }
+
+            //全名
+            if (string.IsNullOrWhiteSpace(request.FullName))
+            {
+                response.IsSuccess = false;
+                response.Reason = "全名不正确";
+                return Content(response.ToJson());
+            }
+
+            //护照
+            if (string.IsNullOrWhiteSpace(request.FullName))
+            {
+                response.IsSuccess = false;
+                response.Reason = "护照不正确";
+                return Content(response.ToJson());
+            }
+          
+            #endregion
+
+            try
+            {
+                // orderApp.AddOrder(orderViewModel);
+
+                //获取用户信息
+                var member = memberApp.GetList(item => item.FullName == request.FullName && item.CredentialType == (int)CredentialTypeEnum.Passport&&item.CredentialInformation==request.PassportNo).FirstOrDefault();
+                if (member != null)
+                {
+                    request.MemberId = member.MemberId;
+                    var orderList=orderApp.GetOrderList(request);
+
+                    //预约信息
+                    if (orderList != null && orderList.Any())
+                    {
+                        foreach (var order in orderList)
+                        {
+                            GetOrderListResponse getOrderListResponse = new GetOrderListResponse();
+                            getOrderListResponse.FullName = member.FullName.ToString();
+                            getOrderListResponse.Gender = (GenderEnum)member.Gender;
+                            getOrderListResponse.DateOfBirth = member.DateOfBirth;
+                            getOrderListResponse.IdentificationNumber = member.CredentialInformation;
+                            getOrderListResponse.CellPhone = member.ContactNumber;
+
+                            getOrderListResponse.Description = order.SymptomDescription;
+                            getOrderListResponse.Appointment = order.OrderDate.ToString();
+                            getOrderListResponse.Operating = order.AddDate;
+
+                            list.Add(getOrderListResponse);
+                        }
+                    }
+                 
+                }
                 response.IsSuccess = true;
             }
             catch (Exception ex)

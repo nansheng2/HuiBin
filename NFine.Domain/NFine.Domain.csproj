@@ -44,12 +44,16 @@
     <Compile Include="01 Infrastructure\IDeleteAudited.cs" />
     <Compile Include="01 Infrastructure\IEntity.cs" />
     <Compile Include="01 Infrastructure\IModificationAudited.cs" />
+    <Compile Include="02 ViewModel\AddOrderResponse.cs" />
     <Compile Include="02 ViewModel\DoctorViewModel.cs" />
     <Compile Include="02 ViewModel\GetDoctorInfoRequest.cs" />
     <Compile Include="02 ViewModel\GetDoctorInfoResponse.cs" />
     <Compile Include="02 ViewModel\GetDoctorListResponse.cs" />
     <Compile Include="02 ViewModel\GetDoctorOrderInfoRequest.cs" />
     <Compile Include="02 ViewModel\GetDoctorOrderInfoResponse.cs" />
+    <Compile Include="02 ViewModel\GetOrderListRequest.cs" />
+    <Compile Include="02 ViewModel\GetOrderListResponse.cs" />
+    <Compile Include="02 ViewModel\OrderViewModel.cs" />
     <Compile Include="02 ViewModel\ResponseBase.cs" />
     <Compile Include="02 ViewModel\UserOderRequest.cs" />
     <Compile Include="03 Entity\Enums\CredentialTypeEnum.cs" />

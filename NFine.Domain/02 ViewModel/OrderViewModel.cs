@@ -1,5 +1,4 @@
-﻿
-using NFine.Domain.Entity.Enums;
+﻿using NFine.Domain.Entity.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +8,9 @@ using System.Threading.Tasks;
 namespace NFine.Domain.ViewModel
 {
     /// <summary>
-    /// 用户预约请求参数
+    /// 预约
     /// </summary>
-    public class UserOderRequest
+    public class OrderViewModel
     {
         /// <summary>
         /// 证件号码
@@ -104,7 +103,7 @@ namespace NFine.Domain.ViewModel
             get;
             set;
         }
-       
+
 
         /// <summary>
         /// 预约医生
@@ -167,5 +166,7 @@ namespace NFine.Domain.ViewModel
             get;
             set;
         }
+
+      
     }
 }

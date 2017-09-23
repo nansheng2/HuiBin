@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NFine.Domain.Entity.Enums;
+using System;
 
 namespace NFine.Domain.Entity.SystemManage
 {
@@ -67,6 +68,60 @@ namespace NFine.Domain.Entity.SystemManage
         /// 患者Id
         /// </summary>
         public int MemberId
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 午别
+        /// </summary>
+        public OrderTimeTypeEnum Category
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 症状
+        /// </summary>
+        public string SymptomDescription
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime? BeginTime
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime? EndTime
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 预约类型
+        /// </summary>
+        public int NumberType
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 预约号
+        /// </summary>
+        public string OrderNumber
         {
             get;
             set;
