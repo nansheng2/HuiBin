@@ -10,6 +10,7 @@ using NFine.Repository.SystemManage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace NFine.Application.SystemManage
 {
@@ -48,6 +49,17 @@ namespace NFine.Application.SystemManage
                 itemsEntity.Create();
                 service.Insert(itemsEntity);
             }
+        }
+
+        /// <summary>
+        /// 获取列表信息
+        /// </summary>
+        /// <param name="predicate">条件</param>
+        /// <returns></returns>
+
+        public IQueryable<ItemsEntity> IQueryable(Expression<Func<ItemsEntity, bool>> predicate)
+        {
+            return service.IQueryable(predicate);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace NFine.Web.Areas.UIManage.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : ControllerBase
     {
         //
         // GET: /UIManage/Order/

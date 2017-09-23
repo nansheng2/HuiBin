@@ -51,6 +51,7 @@
     <Compile Include="02 ViewModel\GetDoctorListResponse.cs" />
     <Compile Include="02 ViewModel\GetDoctorOrderInfoRequest.cs" />
     <Compile Include="02 ViewModel\GetDoctorOrderInfoResponse.cs" />
+    <Compile Include="02 ViewModel\GetNationalityResponse.cs" />
     <Compile Include="02 ViewModel\GetOrderListRequest.cs" />
     <Compile Include="02 ViewModel\GetOrderListResponse.cs" />
     <Compile Include="02 ViewModel\OrderViewModel.cs" />

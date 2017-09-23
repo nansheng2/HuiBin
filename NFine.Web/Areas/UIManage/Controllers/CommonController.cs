@@ -8,11 +8,25 @@ using System.Web.Mvc;
 
 namespace NFine.Web.Areas.UIManage.Controllers
 {
-    public class CommonController : Controller
+    public class CommonController : ControllerBase
     {
+        ItemsDetailApp itemsDetailApp = new ItemsDetailApp();
         //
         // GET: /UIManage/Common/
-     
 
+        public void GetNationality()
+        {
+
+            var itemsDetailList = itemsDetailApp.GetItemList("Language");
+
+            if (itemsDetailList != null && itemsDetailList.Any())
+            {
+                foreach (var info in itemsDetailList)
+                {
+
+                }
+            }
+
+        }
     }
 }
