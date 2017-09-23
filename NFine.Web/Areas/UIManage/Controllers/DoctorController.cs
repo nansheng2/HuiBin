@@ -61,6 +61,8 @@ namespace NFine.Web.Areas.UIManage.Controllers
                             }
                         }
 
+                        responseDoctorList.Add(doctorResponse);
+
                     }
                     response.Result = responseDoctorList;
                 }
@@ -238,6 +240,7 @@ namespace NFine.Web.Areas.UIManage.Controllers
 
                     response.Result = getDoctorInfoResponse;
                     response.IsSuccess = true;
+                    response.Reason = "";
                 }
             }
             catch (Exception ex)
